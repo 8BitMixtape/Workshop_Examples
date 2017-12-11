@@ -11,7 +11,7 @@
 
 int pos = 0; // current position of larson scanner
 int dir = 1; // direction in which we're moving
-int bright = 127; // max. brightness
+int bright = 255; // max. brightness
 int wait = 70; // scanner speed
 
 int snd = 0; 
@@ -40,7 +40,7 @@ void loop()
     setColorAllPixel  ( COLOR_BLACK ); // clear all pixels
     
     bright = map (getPoti( POTI_RIGHT ), 0, 1023, 10, 255); // map brightness to left poti
-    wait = map (getPoti( POTI_LEFT ), 0, 1023, 100, 5); // map speed to right poti
+    wait = map (getPoti( POTI_LEFT ), 0, 1023, 300, 0); // map speed to right poti
   
     pixels.setPixelColor(pos -4, bright/20, 0, bright/20);
     pixels.setPixelColor(pos -3, bright/13, 0, bright/13);
