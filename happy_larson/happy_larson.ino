@@ -92,7 +92,7 @@ void loop()
     bright = map (getPoti( POTI_RIGHT ), 0, 1023, 10, 255); // map brightness to left poti
     wait = map (getPoti( POTI_LEFT ), 0, 1023, 300, 0); // map speed to right poti
 
-    // display purple knight rider LED 'image' in a certain position
+    // define purple knight rider LED 'image' in a certain position
     pixels.setPixelColor(pos -4, bright/20, 0, bright/20);
     pixels.setPixelColor(pos -3, bright/13, 0, bright/13);
     pixels.setPixelColor(pos -2, bright/5, 0, bright/5);
@@ -102,7 +102,8 @@ void loop()
     pixels.setPixelColor(pos +2, bright/5, 0, bright/5);
     pixels.setPixelColor(pos +3, bright/13, 0, bright/13);
     pixels.setPixelColor(pos +4, bright/20, 0, bright/20);
-    // actually show the pixel image we've just configured
+
+    // actually show the pixel image we've just defined
     pixels.show();
 
     // move LED image on step in direction dir
