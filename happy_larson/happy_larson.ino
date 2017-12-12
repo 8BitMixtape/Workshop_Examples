@@ -56,6 +56,7 @@ The Center for Alternative Coconut Research presents: Happy Larson!
 // include 8BitMixTape NEO functions
 #include "neolib.h"
 
+// define some variables to be used in our code
 int pos = 0; // current position of larson scanner
 int dir = 1; // direction in which we're moving
 int bright = 0; // brightness, a variable tuned by left poti
@@ -63,14 +64,16 @@ int wait = 0; // speed, a variable tuned by right poti
 
 int snd = 0; // the tone to play
 long t = 0; // timer variable
-uint16_t p1 = 0; // modulate the tone through right poti
+uint16_t p1 = 0; // modulate the tone, tuned by right poti
 
+// things that need to happen once, upon startup
 void setup() 
 {
   // initialize 8BitMixTape NEO
   neobegin();
 }
 
+// our main loop. we'll keep doing this for eternity!
 void loop() 
 {
   // generate some cool sound output
@@ -105,19 +108,19 @@ void loop()
     // move LED image on step in direction dir
     pos+=dir;
 
-    // if we've gone below 0, reverse direction
+    // if we've gone below position 0, reverse direction
     if(pos < -2) {
       pos = -1;
       dir = -dir;
     }
-    // if we've gone above 8, reverse direction
+    // if we've gone above position 8, reverse direction
     else if(pos > 9) {
       pos = 8;
       dir = -dir;
     }  
   }
 
-  // sleep for some time (modulated by right poti)
+  // sleep for a while (time modulated by right poti)
   delayMicroseconds(wait);
 }
 
