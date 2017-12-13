@@ -1,4 +1,8 @@
 /* 
+ *  
+ *  This code needs "Reset disabled" set via fusebits
+ *  avrdude -P /dev/ttyACM0 -b 19200 -c avrisp -p t85 -U efuse:w:0xfe:m -U hfuse:w:0x5d:m -U lfuse:w:0xe1:m
+
 =========================================================================================================
  _____  ______ _ _      ___  ____      _                       _   _  _____ _____ 
 |  _  | | ___ (_) |     |  \/  (_)    | |                     | \ | ||  ___|  _  |
