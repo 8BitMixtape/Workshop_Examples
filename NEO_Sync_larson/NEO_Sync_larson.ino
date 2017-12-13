@@ -1,4 +1,7 @@
 /* 
+ *  This code needs "Reset disabled" set via fusebits
+ *  avrdude -P /dev/ttyACM0 -b 19200 -c avrisp -p t85 -U efuse:w:0xfe:m -U hfuse:w:0x5d:m -U lfuse:w:0xe1:m
+
 =========================================================================================================
  _____  ______ _ _      ___  ____      _                       _   _  _____ _____ 
 |  _  | | ___ (_) |     |  \/  (_)    | |                     | \ | ||  ___|  _  |
@@ -36,6 +39,8 @@ The Center for Alternative Coconut Research presents: Happy Larson!
   v0.2  10.12.2017 -G-A-N-D-A-L-F-  improved brightness & speed control, added oneliner audio
   v0.3  11.12.2017 -D-U-S-J-A-G-R-  improved audio
   v1.0  12.12.2017 -G-A-N-D-A-L-F-  cleaned up code & improved documentation
+  v1.1  13.12.2017 -D-U-S-J-A-G-R-  added sync-out
+
   
   It is mandatory to keep the list of authors in this code.
   Please add your name if you improve/extend something
