@@ -1,15 +1,41 @@
 /*
+The Center for Alternative Coconut Research presents:
+-----------------------------------------------------
+  Description:
   8 step sequencer with different waveforms
 
-  Press both bottoms at the same time to start cycle.
+  Press both bottoms at the same time to start cycle. Number of steps are defined by where you start.
+  
+  30.05.2017 061 ChrisMicro  | first commit
+  20.11.2017 061 dusjagr     | modded colors and envelope control
+  13.12.2017 062 dusjagr     | adding syncOut on PB5
+  
+  This code needs "Reset disabled" set via fusebits
+  avrdude -P /dev/ttyACM0 -b 19200 -c avrisp -p t85 -U efuse:w:0xfe:m -U hfuse:w:0x5d:m -U lfuse:w:0xe1:m
 
-  30.5.2017 ChrisMicro
+=========================================================================================================
+ _____  ______ _ _      ___  ____      _                       _   _  _____ _____ 
+|  _  | | ___ (_) |     |  \/  (_)    | |                     | \ | ||  ___|  _  |
+ \ V /  | |_/ /_| |_    | .  . |___  _| |_ __ _ _ __   ___    |  \| || |__ | | | |
+ / _ \  | ___ \ | __|   | |\/| | \ \/ / __/ _` | '_ \ / _ \   | . ` ||  __|| | | |
+| |_| | | |_/ / | |_    | |  | | |>  <| || (_| | |_) |  __/   | |\  || |___\ \_/ /
+\_____/ \____/|_|\__|   \_|  |_/_/_/\_\\__\__,_| .__/ \___|   \_| \_/\____/ \___/ 
+                                             | |                              
+     http://8bitmixtape.cc                   |_|                    
+
+  * based on TinyAudioBoot and hex2wav by Chris Haberer, Fredrik Olofsson, Budi Prakosa
+    https://github.com/ChrisMicro/AttinySound
+
+=========================================================================================================
+
+  
 */
 
 #include "neolib.h"
 #include "neoSoundPittix.h"
 #include "Pt1.h"
 
+int syncPin = 5;
 
 typedef struct
 {
@@ -19,10 +45,21 @@ typedef struct
 
 sound_t Sounds[8];
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* the setup routine runs once when you start the tape or press reset
+========================================================================================================================
+   _________            _                   
+  | setup() |   ___ ___| |_ _ _ _ _ 
+  |  o___o  |  |_ -| -_|  _| | | . |
+  |__/___\__|  |___|___|_| |___|  _|
+                               |_|    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
 void setup()
 {
   neobegin();
-
+  pinMode(syncPin, OUTPUT);
+  
   // start sound
   beginNeoPittix();
   setFrequency(440);
@@ -33,8 +70,6 @@ void setup()
 
 uint8_t  LedPosition   = 0;
 uint8_t  ColorPosition = 0;
-//uint32_t Colors[] = { COLOR_GREEN, COLOR_RED, COLOR_BLUE, COLOR_PINK};
-
 
 #define POITHYSTERESIS 30 // was 30
 
@@ -47,6 +82,17 @@ uint16_t Counter = 1000;
 Pt1 lp1(0x100);
 
 uint8_t NumberOfSteps;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* The main loop to put all your code
+========================================================================================================================
+   _________    _    
+  | loop()  |  | |___ ___ ___ 
+  |  o___o  |  | | . | . | . | 
+  |__/___\__|  |_|___|___|  _| 
+                         |_| 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
 
 void loop()
 {
@@ -106,7 +152,13 @@ void loop()
   }
 
   if (State == 1)
-  {
+  {   
+    // SyncOut per step
+      digitalWrite(syncPin,HIGH);
+      delay(0);
+      digitalWrite(syncPin,LOW);
+
+    // playMode
     lp1.setT((255-rp)*4);
     setAmplitude(lp1.filter(0));
     Counter--;
@@ -123,6 +175,13 @@ void loop()
       if ( LedPosition > NumberOfSteps) LedPosition = 0;
 
       pixels.setPixelColor( LedPosition, Wheel(Sounds[ LedPosition ].waveType)); // COLOR_PINK
+
+      /*
+      // SyncOut per step
+      digitalWrite(syncPin,HIGH);
+      delay(0);
+      digitalWrite(syncPin,LOW);
+    */
       pixels.show();
 
       setFrequency( Sounds[ LedPosition ].f_Hz );
