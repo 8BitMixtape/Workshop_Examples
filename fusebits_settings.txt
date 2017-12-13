@@ -1,0 +1,9 @@
+original mixtape NEO
+-U efuse:w:0xfe:m -U hfuse:w:0xdd:m -U lfuse:w:0xe1:m
+
+disable reset
+-U lfuse:w:0xfe:m -U hfuse:w:0x5d:m -U efuse:w:0xe1:m
+
+avrdude -P /dev/ttyACM0 -b 19200 -c avrisp -p t85 -U efuse:w:0xfe:m -U hfuse:w:0xdd:m -U lfuse:w:0xe1:m
+
+
