@@ -153,10 +153,6 @@ void loop()
 
   if (State == 1)
   {   
-    // SyncOut per step
-      digitalWrite(syncPin,HIGH);
-      delay(0);
-      digitalWrite(syncPin,LOW);
 
     // playMode
     lp1.setT((255-rp)*4);
@@ -176,12 +172,12 @@ void loop()
 
       pixels.setPixelColor( LedPosition, Wheel(Sounds[ LedPosition ].waveType)); // COLOR_PINK
 
-      /*
+  
       // SyncOut per step
       digitalWrite(syncPin,HIGH);
-      delay(0);
+      delay(1);
       digitalWrite(syncPin,LOW);
-    */
+   
       pixels.show();
 
       setFrequency( Sounds[ LedPosition ].f_Hz );

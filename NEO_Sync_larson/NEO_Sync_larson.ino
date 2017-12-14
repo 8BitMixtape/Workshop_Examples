@@ -127,7 +127,7 @@ void loop()
     // if we've gone above position 8, reverse direction
     else if(pos > 9) {
       digitalWrite(syncPin,HIGH);
-      delay(0);
+      delayMicroseconds(1000);
       digitalWrite(syncPin,LOW);
       pos = 8;
       dir = -dir;
