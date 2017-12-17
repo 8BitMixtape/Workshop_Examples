@@ -251,14 +251,13 @@ void setup() {
 
 void loop() { 
 int spikeSpeed = 1023 - analogReadScaled(POTI_LEFT);
+int syncSpeed = 1023 - analogReadScaled(POTI_RIGHT);
 digitalWrite(SPEAKERPIN,HIGH);
 digitalWrite(syncPin,HIGH);
 delay(spikeSpeed);
 digitalWrite(SPEAKERPIN,LOW);
 digitalWrite(syncPin,LOW);
-int syncSpeed = 1023 - analogReadScaled(POTI_RIGHT);
 delay(syncSpeed);
-
 
 }
 
