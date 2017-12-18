@@ -127,11 +127,13 @@ void loop()
     setFrequency( Sounds[ LedPosition ].f_Hz );
   }
 
-  int16_t lp = getPoti( POTI_LEFT );   // range 0..1023
-  int16_t rp = getPoti( POTI_RIGHT )>>2;  // range 0..1023
+  int16_t lp = getPoti( POTI_LEFT );        // range 0..1023
+  int16_t rp = getPoti( POTI_RIGHT )>>2;    // range 0..255
 
   if (State == 0)
-  {
+  { 
+    // progMode
+    setAmplitude(255); // make sure the sound is on during progMode
     if ( abs(rp - oldPotiRight) > POITHYSTERESIS )
     {
       setWaveformFine(rp);
@@ -153,26 +155,22 @@ void loop()
 
   if (State == 1)
   {   
-
     // playMode
-    lp1.setT((255-rp)*4);
+    lp1.setT((255-rp)*4);           // envelope time
     setAmplitude(lp1.filter(0));
     Counter--;
     if (Counter == 0)
     {
-
       Counter = 1023 - lp;
 
       if (Counter > 800) Counter = 800;
       if (Counter < 1) Counter = 1;
 
-
       LedPosition++;
       if ( LedPosition > NumberOfSteps) LedPosition = 0;
 
-      pixels.setPixelColor( LedPosition, Wheel(Sounds[ LedPosition ].waveType)); // COLOR_PINK
+      pixels.setPixelColor( LedPosition, Wheel(Sounds[ LedPosition ].waveType)); // color of waveType
 
-  
       // SyncOut per step
       digitalWrite(syncPin,HIGH);
       delay(1);
@@ -188,8 +186,7 @@ void loop()
 
   }
 
-  delay(0);
-
+  //delay(0); // no need for extra delay
 
 }
 

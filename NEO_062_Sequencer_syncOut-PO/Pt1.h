@@ -41,6 +41,4 @@ class Pt1
 };
 
 
-
-
 #endif /* PT1_H_ */

@@ -51,7 +51,6 @@
   13.08.2014  chris, version 1.5.1  copyright message added, code cleaned
   17.02.2017  chris, version 2.0    code reworked vor Attiny85, sound out PB1
   04.03.2017  chris, version 2.1    code encapsulated in separate file
-  17.12.2017  dusjagr, version 2.1  small modifications
 
   C. -H-A-B-E-R-E-R- alias chris
 
@@ -131,32 +130,17 @@ void setWaveformFine(uint8_t wert)
   
   wert=255-wert;
   
-  if (wert <= 35) {
-      wave = NOISE;
-    }
-    if (wert > 35) {
-      wave = RECTANGLE;
-      RectanglePwmValue = 0x05;
-    }
-    if (wert > 55) {
-      wave = RECTANGLE;
-      RectanglePwmValue = 0x10;
-    }
-    if (wert > 80) {
-      wave = RECTANGLE;
-      RectanglePwmValue = 0x20;
-    }
-    if (wert > 110) {
-      wave = RECTANGLE;
-      RectanglePwmValue = 0x40;
-    }
-    if (wert > 140) {
-      wave = RECTANGLE;
-      RectanglePwmValue = 0x80;
-    }
-    if (wert > 170) wave = SAWTOOTH;
-    if (wert > 200) wave = TRIANGLE;
-    if (wert > 230) wave = SINUS;
+  if (wert <= 60) {
+    wave = NOISE;
+  }
+  if (wert > 60 && wert <= 188)
+  {
+    wave = RECTANGLE;
+    RectanglePwmValue = 315-wert;
+  }
+  if (wert > 188) wave = SAWTOOTH;
+  if (wert > 200) wave = TRIANGLE;
+  if (wert > 220) wave = SINUS;
 
   wavetype = wave;
 }
