@@ -40,6 +40,7 @@ The Center for Alternative Coconut Research presents: Happy Larson!
   v0.2  10.12.2017 -G-A-N-D-A-L-F-  improved brightness & speed control, added oneliner audio
   v0.3  11.12.2017 -D-U-S-J-A-G-R-  improved audio
   v1.0  12.12.2017 -G-A-N-D-A-L-F-  cleaned up code & improved documentation
+  v1.1  21.12.2017 -G-A-N-D-A-L-F-  added different color modes
 
   
   It is mandatory to keep the list of authors in this code.
@@ -66,11 +67,31 @@ int snd = 0; // the tone to play
 long t = 0; // timer variable
 uint16_t p1 = 0; // modulate the tone, tuned by right poti
 
+typedef struct {
+  int r; // red % (1-100)
+  int g; // green % (1-100)
+  int b; // blue % (1-100)
+} colorType;
+
+const colorType aColor[] = {
+  {100, 0, 0}, // classic knight rider red
+  {0,100,0}, // plain green
+  {0,0,100}, // plain blue
+  {100, 0, 100}, // purple heart for dusjagr
+  {300, 50, 30}, // out of bounds, giving weird effects
+  {30, 200, 30} // green out of bounds
+};
+
+int totalColors;
+int colorSet;
+
 // things that need to happen once, upon startup
 void setup() 
 {
   // initialize 8BitMixTape NEO
   neobegin();
+  totalColors = sizeof(aColor) / sizeof(aColor[0]);
+  colorSet = 0;
 }
 
 // our main loop. we'll keep doing this for eternity!
@@ -86,22 +107,36 @@ void loop()
 
   // update LEDs every 150 sound-cycles
   if (t % 150 == 0) {
+    // query state of our buttons
+    uint8_t b=getButton();
+    
+    // choose colorSet accordingly
+    if( b == BUTTON_LEFT )                  colorSet++; 
+    if( b == BUTTON_RIGHT )                 colorSet--;
+    
+    // reset if colorSet selection is out of bounds
+    if (colorSet > (totalColors - 1)) {
+      colorSet = 0; 
+    }
+    if (colorSet < 0) {
+      colorSet = (totalColors - 1);
+    }
 
-    setColorAllPixel  ( COLOR_BLACK ); // clear all pixels
+    setColorAllPixel  ( COLOR_BLACK ); // first of all, clear all pixels
     
     bright = map (getPoti( POTI_RIGHT ), 0, 1023, 10, 255); // map brightness to left poti
     wait = map (getPoti( POTI_LEFT ), 0, 1023, 300, 0); // map speed to right poti
 
-    // define purple knight rider LED 'image' in a certain position
-    pixels.setPixelColor(pos -4, bright/20, 0, bright/20);
-    pixels.setPixelColor(pos -3, bright/13, 0, bright/13);
-    pixels.setPixelColor(pos -2, bright/5, 0, bright/5);
-    pixels.setPixelColor(pos -1, bright/2, 0, bright/2);
-    pixels.setPixelColor(pos, bright, 0, bright);
-    pixels.setPixelColor(pos +1, bright/2, 0, bright/2);
-    pixels.setPixelColor(pos +2, bright/5, 0, bright/5);
-    pixels.setPixelColor(pos +3, bright/13, 0, bright/13);
-    pixels.setPixelColor(pos +4, bright/20, 0, bright/20);
+    // define knight rider LED 'image' in a certain position
+    pixels.setPixelColor(pos -4, aColor[colorSet].r*bright/2000, aColor[colorSet].g*bright/2000, aColor[colorSet].b*bright/2000);
+    pixels.setPixelColor(pos -3, aColor[colorSet].r*bright/1300, aColor[colorSet].g*bright/1300, aColor[colorSet].b*bright/1300);
+    pixels.setPixelColor(pos -2, aColor[colorSet].r*bright/500, aColor[colorSet].g*bright/500, aColor[colorSet].b*bright/500);
+    pixels.setPixelColor(pos -1, aColor[colorSet].r*bright/200, aColor[colorSet].g*bright/200, aColor[colorSet].b*bright/200);
+    pixels.setPixelColor(pos, aColor[colorSet].r*bright/100, aColor[colorSet].g*bright/100, aColor[colorSet].b*bright/100);
+    pixels.setPixelColor(pos +1, aColor[colorSet].r*bright/200, aColor[colorSet].g*bright/200, aColor[colorSet].b*bright/200);
+    pixels.setPixelColor(pos +2, aColor[colorSet].r*bright/500, aColor[colorSet].g*bright/500, aColor[colorSet].b*bright/500);
+    pixels.setPixelColor(pos +3, aColor[colorSet].r*bright/1300, aColor[colorSet].g*bright/1300, aColor[colorSet].b*bright/1300);
+    pixels.setPixelColor(pos +4, aColor[colorSet].r*bright/2000, aColor[colorSet].g*bright/2000, aColor[colorSet].b*bright/2000);
 
     // actually show the pixel image we've just defined
     pixels.show();
